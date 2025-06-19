@@ -1,0 +1,2 @@
+# Requires Python 3.10
+# other dependencies should be listed here.
