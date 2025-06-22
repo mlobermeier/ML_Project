@@ -6,7 +6,7 @@
 
 ## Wer macht was?
 #### Jonas
-- ...
+- Lenet5 approach to try to predict target listing price.
 #### Maja
 - ...
 #### Christina
