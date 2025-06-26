@@ -4,6 +4,10 @@
 - Wir werden Funktionen brauchen um die Daten aufzubereiten und fuer die Auswertung in die richtige Form zu bringen.
 - Welche Machine Learning Prozesse koennen wir nutzen.
 - Data Preprocessing to numerical variables
+- Tabular Data Model
+- Combining Models for final predication
+
+- **Wie kombinieren wir Modelle?**
 
 ## Wer macht was?
 #### Jonas
