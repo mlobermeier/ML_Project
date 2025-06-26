@@ -5,7 +5,7 @@
 - Welche Machine Learning Prozesse koennen wir nutzen.
 - Data Preprocessing to numerical variables
 - Tabular Data Model
-- Combining Models for final predication
+- Combining Models for final predication (Tokenization, gibt packages)
 
 - **Wie kombinieren wir Modelle?**
 
