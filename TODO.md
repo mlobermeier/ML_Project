@@ -7,8 +7,16 @@
 - - Random Forest anschauen
 - - Embedding Vektoren
 
+- Data Preprocessing to numerical variables
+- Tabular Data Model
+- Combining Models for final predication (Tokenization, gibt packages)
+
+- **Wie kombinieren wir Modelle?**
+
+------
 Tutor:
 Text, Tabular Data, Reviews
+------
 
 ## Wer macht was?
 #### Jonas
