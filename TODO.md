@@ -10,6 +10,7 @@
 - Data Preprocessing to numerical variables
 - Tabular Data Model
 - Combining Models for final predication (Tokenization, gibt packages)
+  
 
 - **Wie kombinieren wir Modelle?**
 
@@ -27,4 +28,5 @@ Text, Tabular Data, Reviews
 #### Maja
 - Random Forests
 #### Christina
-- Embedding Vektoren
+- Host ID raus
+- Modelle verbinden
