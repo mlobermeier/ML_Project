@@ -3,15 +3,15 @@
 
 import sys
 import os
-sys.path.append(os.path.abspath("../src"))
+sys.path.append(os.path.abspath(""))
 
 import pandas as pd 
 import torch
 
 
 # Import functions from src modules
-from image-model.predict import generate_image_predictions
-from tabular_model.pipeline import rune_tabular_pipeline
+from image_predictions import generate_image_predictions
+from random_forest_with_tuning import run_random_forest
 
 # Configuration
 LISTINGS_CSV = "../data/listings.csv"

@@ -1,3 +1,19 @@
-# Requires Python 3.10
-requests-2.32.4-py3-none-any.whl
-pandas-2.3.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+cryptography==45.0.5
+docutils==0.21.2
+HTMLParser==0.0.2
+jnius==1.1.0
+matplotlib==3.10.3
+numpy==2.3.1
+pandas==2.3.0
+Pillow==11.3.0
+protobuf==6.31.1
+pyOpenSSL==25.1.0
+redis==6.2.0
+scikit_learn==1.7.0
+seaborn==0.13.2
+thread==2.0.5
+torch==2.7.1
+torchvision==0.22.1
+urllib3_secure_extra==0.1.0
+xgboost==3.0.2
+xmlrpclib==1.0.1
