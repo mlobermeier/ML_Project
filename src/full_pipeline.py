@@ -1,17 +1,15 @@
-
-#Run this notebook to run the full AirBnB price prediction model
-
 import sys
 import os
-sys.path.append(os.path.abspath(""))
+# Ensure the src directory is in the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-import pandas as pd 
+import pandas
 import torch
 
 
 # Import functions from src modules
 from image_predictions import generate_image_predictions
-from random_forest_with_tuning import run_random_forest
+from random_forest_model import run_random_forest
 
 # Configuration
 LISTINGS_CSV = "../data/listings.csv"
@@ -20,7 +18,6 @@ MODEL_PATH = "../models/lenet5.pth"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 ## create image predictions
-## @Chris make this possible!
 print("Generating predictions from image model...")
 image_predictions = generate_image_predictions(
     csv_file=LISTINGS_CSV,
@@ -32,9 +29,16 @@ image_predictions = generate_image_predictions(
 
 # Run full tabular pipeline including iamge features
 print("Running tabular pipeline with image features...")
-rune_tabular_pipeline(
+model, metrics, preds, figs = run_random_forest(
     csv_file=LISTINGS_CSV,
     image_predictions=image_predictions
 )
+
+print("MAE:", metrics["MAE"])
+print("RMSE:", metrics["RMSE"])
+
+for name, fig in figs.items():
+    fig.savefig(f"../figures/{name}.png")
+    print(f"Saved figure: {name}.png")
 
 print("Full pipeline completed successfully!")

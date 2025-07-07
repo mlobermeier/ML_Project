@@ -108,7 +108,7 @@ def run_random_forest(csv_file, image_predictions=None):
     val_mae_mean = -np.mean(val_scores, axis=1)
 
     plt.figure(figsize=(8, 5))
-    plt.plot(param_range, train_mae_mean, label="Training MAE", marker='o')
+    fig_val_curve = plt.plot(param_range, train_mae_mean, label="Training MAE", marker='o')
     plt.plot(param_range, val_mae_mean, label="Validation MAE", marker='o')
     plt.xlabel("max_depth")
     plt.ylabel("MAE")
@@ -126,12 +126,14 @@ def run_random_forest(csv_file, image_predictions=None):
         values='mean_test_score'
     )
 
-    plt.figure(figsize=(8, 6))
-    sns.heatmap(pivot_table, annot=True, fmt=".3f", cmap="viridis")
-    plt.title("Grid Search: mean_test_score (neg MAE) by max_depth and min_samples_leaf")
-    plt.xlabel("min_samples_leaf")
-    plt.ylabel("max_depth")
+    fig_gridheatmap, ax_heatmap = plt.subplots(figsize=(8, 6))
+    sns.heatmap(pivot_table, annot=True, fmt=".3f", cmap="viridis", ax=ax_heatmap)
+    ax_heatmap.set_title("Grid Search: mean_test_score (neg MAE) by max_depth and min_samples_leaf")
+    ax_heatmap.set_xlabel("min_samples_leaf")
+    ax_heatmap.set_ylabel("max_depth")
+
     plt.show()
+
 
     # 3. Learning Curve
     train_sizes, train_scores, val_scores = learning_curve(
@@ -146,14 +148,15 @@ def run_random_forest(csv_file, image_predictions=None):
     train_mae_mean = -np.mean(train_scores, axis=1)
     val_mae_mean = -np.mean(val_scores, axis=1)
 
-    plt.figure(figsize=(8, 5))
-    plt.plot(train_sizes, train_mae_mean, label="Training MAE", marker='o')
-    plt.plot(train_sizes, val_mae_mean, label="Validation MAE", marker='o')
-    plt.xlabel("Training set size")
-    plt.ylabel("MAE")
-    plt.title("Learning Curve")
-    plt.legend()
-    plt.grid(True)
+   
+    fig_learning_curve, ax_lc = plt.subplots(figsize=(8, 5))
+    ax_lc.plot(train_sizes, train_mae_mean, label="Training MAE", marker='o')
+    ax_lc.plot(train_sizes, val_mae_mean, label="Validation MAE", marker='o')
+    ax_lc.set_xlabel("Training set size")
+    ax_lc.set_ylabel("MAE")
+    ax_lc.set_title("Learning Curve")
+    ax_lc.legend()
+    ax_lc.grid(True)
     plt.show()
 
     # 4. Feature Importance Plot (top 20 features)
@@ -162,22 +165,45 @@ def run_random_forest(csv_file, image_predictions=None):
 
     sorted_idx = np.argsort(importances)[::-1][:20]  # top 20 features
 
-    plt.figure(figsize=(10, 6))
-    plt.barh(range(len(sorted_idx)), importances[sorted_idx][::-1], align='center')
-    plt.yticks(range(len(sorted_idx)), feature_names[sorted_idx][::-1])
-    plt.xlabel("Feature Importance")
-    plt.title("Top 20 Feature Importances")
+    fig_importance, ax_imp = plt.subplots(figsize=(10, 6))
+    ax_imp.barh(range(len(sorted_idx)), importances[sorted_idx][::-1], align='center')
+    ax_imp.yticks(range(len(sorted_idx)))
+    ax_imp.set_yticklabels(feature_names[sorted_idx][::-1])
+    ax_imp.set_xlabel("Feature Importance")
+    ax_imp.set_title("Top 20 Feature Importances")
     plt.grid(True)
     plt.show()
 
     # 5. Residual Plot (Test Set)
     residuals = y_test - test_preds
 
-    plt.figure(figsize=(8, 6))
-    plt.scatter(test_preds, residuals, alpha=0.3)
-    plt.axhline(y=0, color='r', linestyle='--')
-    plt.xlabel("Predicted Price")
-    plt.ylabel("Residuals (Actual - Predicted)")
-    plt.title("Residual Plot")
-    plt.grid(True)
+    fig_resid, ax_resid = plt.subplots(figsize=(8, 6))
+    ax_resid.scatter(test_preds, residuals, alpha=0.3)
+    ax_resid.axhline(y=0, color='r', linestyle='--')
+    ax_resid.set_xlabel("Predicted Price")
+    ax_resid.set_ylabel("Residuals (Actual - Predicted)")
+    ax_resid.set_title("Residual Plot")
+    ax_resid.grid(True)
+
     plt.show()
+
+
+    # 6. Prepare results for return
+    metrics = {
+        "MAE": test_mae,
+        "R2": r2,
+        "RMSE": np.sqrt(mean_absolute_error(y_test, test_preds)**2),
+    }
+    preds = {
+        "val_preds": val_preds,
+        "test_preds": test_preds
+    }
+    figs = {
+        "validation_curve": fig_val_curve,
+        "grid_search_heatmap": fig_gridheatmap,
+        "learning_curve": fig_learning_curve,
+        "feature_importance": fig_importance,
+        "residual_plot": fig_resid
+    }
+     
+    return {best_model, metrics, preds, figs}

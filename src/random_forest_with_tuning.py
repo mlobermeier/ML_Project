@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV, validation_c
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import mean_absolute_error, r2_score
 
+
 # 1. Load and clean data
 data = pd.read_csv("data/listings.csv")
 data["price"] = data["price"].replace('[\$,]', '', regex=True).astype(float)
