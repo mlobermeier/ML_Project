@@ -9,7 +9,7 @@ import torch
 
 # Import functions from src modules
 from image_predictions import generate_image_predictions
-from random_forest_model import run_random_forest
+from boosting_test import run_boosting
 
 # Configuration
 LISTINGS_CSV = "../data/listings.csv"
@@ -29,7 +29,7 @@ image_predictions = generate_image_predictions(
 
 # Run full tabular pipeline including iamge features
 print("Running tabular pipeline with image features...")
-model, metrics, preds, figs = run_random_forest(
+model, metrics, preds, figs, log, features = run_boosting(
     csv_file=LISTINGS_CSV,
     image_predictions=image_predictions
 )
