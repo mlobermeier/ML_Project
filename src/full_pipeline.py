@@ -17,11 +17,12 @@ IMAGE_DIR = "../data/images"
 MODEL_PATH = "../models/lenet5.pth"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
+
 ## create image predictions
 print("Generating predictions from image model...")
-image_predictions = generate_image_predictions(
+image_predictions, model, log, figs = generate_image_predictions(
     csv_file=LISTINGS_CSV,
-    image_dir=IMAGE_DIR,
+    img_dir=IMAGE_DIR,
     model_path=MODEL_PATH,
     device=DEVICE   
 )
