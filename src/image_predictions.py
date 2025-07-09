@@ -210,6 +210,37 @@ def run_predictions(csv_file, img_dir, device_, model_path):
     # Save the model
     torch.save(model.state_dict(), model_path)
 
+    ###########################################################
+    # Run saved model on all images in the dataset
+    full_loader = DataLoader(dataset, batch_size=32, shuffle=False)
+
+    model.eval()
+    all_listing_ids = []
+    all_pred_classes = []
+
+    with torch.no_grad():
+        for i, (images, labels) in enumerate(full_loader):
+            batch_start_idx = i * full_loader.batch_size
+            batch_end_idx = batch_start_idx + images.size(0)
+
+            batch_inices = list(range(batch_start_idx, batch_end_idx))
+
+            images = images.to(device)
+            outputs = model(images)
+            _, predicted = torch.max(outputs, 1)
+
+            all_listing_ids.extend([dataset.data.iloc[idx]["id"] for idx in batch_inices])
+            all_pred_classes.extend(predicted.cpu().numpy().tolist())
+
+    # Create a DataFrame with the results
+    image_predictions = pd.DataFrame({
+        "listing_id": all_listing_ids,
+        "predicted_class": all_pred_classes
+    })
+  
+    ###########################################################
+
+
     log = {"total_images_downloaded": num_images,
            "epoch_losses": epoch_losses,
            "number_of_classes": num_classes,
@@ -221,6 +252,7 @@ def run_predictions(csv_file, img_dir, device_, model_path):
         "fig_pred_vs_price": fig_pred_vs_price
     }
 
+    # Return the predictions, model, log, and figures
     return {
         "image_predictions": image_predictions,
         "model": model,
