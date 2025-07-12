@@ -15,15 +15,17 @@ from pathlib import Path
 
 # Get absolute path to the current script
 current_path = Path(__file__).resolve()
-
-# Search upward for ML_project
-for parent in current_path.parents:
-    if parent.name == "ML_project":
-        os.chdir(parent)
-        print(f"Working directory set to: {parent}")
-        break
+if current_dir.name == "ML_Project":
+    print(f"Current directory is already set to: {current_dir}")
 else:
-    raise FileNotFoundError("Could not find 'ML_project' in the path hierarchy.")
+    # Search upward for ML_project
+    for parent in current_path.parents:
+        if parent.name == "ML_Project":
+            os.chdir(parent)
+            print(f"Working directory set to: {parent}")
+            break
+    else:
+        raise FileNotFoundError("Could not find 'ML_project' in the path hierarchy.")
 
 
 # Configuration
