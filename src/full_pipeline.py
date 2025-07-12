@@ -6,40 +6,52 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 's
 import pandas
 import torch
 
-
 # Import functions from src modules
 from image_predictions import generate_image_predictions
 from boosting_test import run_boosting
 
 # Configuration
-LISTINGS_CSV = "../data/listings.csv"
-IMAGE_DIR = "../data/images"
-MODEL_PATH = "../models/lenet5.pth"
+LISTINGS_CSV = os.path.join("data", "listings.csv") 
+IMAGE_DIR = os.path.join("data", "images")
+MODEL_PATH = os.path.join("models", "lenet5.pth")  
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 ## create image predictions
 print("Generating predictions from image model...")
-image_predictions, model, log, figs = generate_image_predictions(
+image_outputs = generate_image_predictions(
     csv_file=LISTINGS_CSV,
     img_dir=IMAGE_DIR,
     model_path=MODEL_PATH,
-    device=DEVICE   
+    device_=DEVICE   
 )
+
+image_predictions = image_outputs["image_predictions"]
+img_model = image_outputs["model"]
+img_log = image_outputs["log"]
+img_figs = image_outputs["figs"]
 
 
 # Run full tabular pipeline including iamge features
 print("Running tabular pipeline with image features...")
-model, metrics, preds, figs, log, features = run_boosting(
+boosting_output = run_boosting(
     csv_file=LISTINGS_CSV,
     image_predictions=image_predictions
 )
 
-print("MAE:", metrics["MAE"])
-print("RMSE:", metrics["RMSE"])
+boosting_model = boosting_output["model"]
+boosting_metrics = boosting_output["metrics"]
+boosting_preds = boosting_output["preds"]
+boosting_figs = boosting_output["figs"]
+boosting_log = boosting_output["log"]
+boosting_features = boosting_output["features"]
 
-for name, fig in figs.items():
-    fig.savefig(f"../figures/{name}.png")
+print("MAE:", boosting_metrics["MAE"])
+print("RMSE:", boosting_metrics["Validation RMSE"])
+
+for name, fig in boosting_figs.items():
+    fig_path = os.path.join("figures", f"{name}.png")
+    fig.savefig(fig_path)
     print(f"Saved figure: {name}.png")
 
 print("Full pipeline completed successfully!")

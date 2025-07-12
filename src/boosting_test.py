@@ -13,9 +13,9 @@ def run_boosting(csv_file, image_predictions=None):
     data = pd.read_csv(csv_file)
     if image_predictions is not None:
         # Merge image predictions if provided
-        data = data.merge(image_predictions, on="listing_id", how="left")
+        data = data.merge(image_predictions, left_on="id", right_on="listing_id", how="left")
         # Drop rows with missing image predictions
-        data = data.dropna(subset=["image_prediction"])
+        data = data.dropna(subset=["predicted_class"])
 
     
     data["price"] = data["price"].replace('[\$,]', '', regex=True).astype(float)
@@ -164,8 +164,8 @@ def run_boosting(csv_file, image_predictions=None):
     }
 
     features = {
-        "importances" = my_model.feature_importances_,
-        "names" = OH_X_train.columns.tolist()
+        "importances": my_model.feature_importances_,
+        "names": OH_X_train.columns.tolist()
     }
 
     return{

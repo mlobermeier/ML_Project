@@ -14,7 +14,7 @@ from image_lenet import ListingsDataset
 from image_lenet import LeNet5
 
 #########################################################
-def run_predictions(csv_file, img_dir, device_, model_path):
+def generate_image_predictions(csv_file, img_dir, device_, model_path):
     #load the dataset and save image urls and listings ids in a dictionary
     #DONT RUN THIS UNLESS YOU WANT TO DOWNLOAD ALL IMAGES IT TAKES A LONG TIME
     df = pd.read_csv(csv_file)
@@ -26,7 +26,7 @@ def run_predictions(csv_file, img_dir, device_, model_path):
     print(f"Total images to download: {num_images}")
     #download images
     #for listing_id, image_url in id_image_dicct.items():
-    #    image_downloader(image_url, listing_id, True)
+      #  image_downloader(image_url, listing_id, True, img_dir)
 
     ############################################################
 
@@ -53,7 +53,7 @@ def run_predictions(csv_file, img_dir, device_, model_path):
 
     ###########################################################
 
-    model = LeNet5().to(device)
+    model = LeNet5(num_classes = None).to(device)
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
     num_epochs = 10

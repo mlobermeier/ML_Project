@@ -1,3 +1,5 @@
 # Ignore the virtual environment folder
 .venv/
 *.jpg
+src/__pycache__/
+data/images/
