@@ -15,8 +15,8 @@ from pathlib import Path
 
 # Get absolute path to the current script
 current_path = Path(__file__).resolve()
-if current_dir.name == "ML_Project":
-    print(f"Current directory is already set to: {current_dir}")
+if current_path.name == "ML_Project":
+    print(f"Current directory is already set to: {current_path}")
 else:
     # Search upward for ML_project
     for parent in current_path.parents:
