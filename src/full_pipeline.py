@@ -10,6 +10,24 @@ import torch
 from image_predictions import generate_image_predictions
 from boosting_test import run_boosting
 
+import os
+from pathlib import Path
+
+# Get absolute path to the current script
+current_path = Path(__file__).resolve()
+if current_path.name == "ML_Project":
+    print(f"Current directory is already set to: {current_path}")
+else:
+    # Search upward for ML_project
+    for parent in current_path.parents:
+        if parent.name == "ML_Project":
+            os.chdir(parent)
+            print(f"Working directory set to: {parent}")
+            break
+    else:
+        raise FileNotFoundError("Could not find 'ML_project' in the path hierarchy.")
+
+
 # Configuration
 LISTINGS_CSV = os.path.join("data", "listings.csv") 
 IMAGE_DIR = os.path.join("data", "images")

@@ -5,6 +5,7 @@ from xgboost import XGBRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import mean_squared_error
+from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -135,7 +136,42 @@ def run_boosting(csv_file, image_predictions=None):
     ax_val_scatter.set_title('Validation Set: True vs Predicted Prices')
     ax_val_scatter.grid(True)
 
-    # 13. Save model
+    mae = np.mean(np.abs(np.expm1(y_val_log) - y_val_pred))
+    r2 = r2_score(np.expm1(y_val_log), y_val_pred) 
+
+    #metrics box
+    metrics_text = f"MAE = {mae:.2f}\nR² = {r2:.2f}"
+    ax_val_scatter.text(0.05, 0.95, metrics_text, transform=ax_val_scatter.transAxes,
+                        fontsize=12, verticalalignment='top', 
+                        bbox=dict(facecolor='white', edgecolor='black', alpha=0.5))
+
+    # 13. Top 20 Feature Importances Plot
+    importances = my_model.feature_importances_
+    feature_names = np.array(OH_X_train.columns)
+
+    sorted_idx = np.argsort(importances)[::-1][:20]  # top 20 features
+
+    fig_feat_imp, ax_feat_imp = plt.subplots(figsize=(10, 6))
+    ax_feat_imp.barh(range(len(sorted_idx)), importances[sorted_idx][::-1], align='center')
+    ax_feat_imp.set_yticks(range(len(sorted_idx)))
+    ax_feat_imp.set_yticklabels(feature_names[sorted_idx][::-1])
+    ax_feat_imp.set_xlabel("Feature Importance")
+    ax_feat_imp.set_title("Top 20 Feature Importances")
+    ax_feat_imp.grid(True)
+
+    # 14. Residual pplot (Validation Set)
+    residuals = np.expm1(y_val_log) - y_val_pred  # true - predicted
+
+    fig_residuals, ax_residuals = plt.subplots(figsize=(8, 6))
+    sns.scatterplot(x=y_val_pred, y=residuals, ax=ax_residuals, alpha=0.5)
+    ax_residuals.axhline(0, color='red', linestyle='--', linewidth=1)
+    ax_residuals.set_xlabel('Predicted Price')
+    ax_residuals.set_ylabel('Residuals (True - Predicted)')
+    ax_residuals.set_title('Residual Plot (Validation Set)')
+    ax_residuals.grid(True)
+
+
+    # 15. Save model
     # my_model.save_model("xgboost_model.json")  # Uncomment to save model
 
     metrics = {
@@ -154,7 +190,9 @@ def run_boosting(csv_file, image_predictions=None):
 
     figs = {
         "val_scatter": fig_val_scatter,
-        "cv_rmse": fig_cv_rmse
+        "cv_rmse": fig_cv_rmse,
+        "feature_importance": fig_feat_imp,
+        "residuals": fig_residuals
 
     }
 
