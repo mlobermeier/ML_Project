@@ -1,9 +1,9 @@
 # function to download the image for a certain airbnb listing id
-def image_downloader(url: str, id: str, resize: bool) -> None:
+def image_downloader(url: str, id: str, resize: bool, img_dir: str) -> None:
     import requests
     from pathlib import Path
 
-    local_dir = Path("../data/image_per_listing")
+    local_dir = Path(img_dir)
     local_dir.mkdir(parents=True, exist_ok=True)
     image_path = local_dir / f"{id}.jpg"
 
