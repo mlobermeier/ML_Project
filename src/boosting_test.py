@@ -22,7 +22,11 @@ def run_boosting(csv_file, image_predictions=None):
     data["price"] = data["price"].replace('[\$,]', '', regex=True).astype(float)
     data = data.dropna(subset=["price"])
 
-    X = data.drop(columns=["price"])
+    # Dropping all columns that should not be taken into our model.
+    X = data.drop(columns=["price", "listing_url", "scrape_id", "last_scraped", "source",
+                           "picture_url", "host_id", "host_url", "host_name", "host_thumbnail_url",
+                           "host_picture_url", "host_verifications", "neighbourhood_group_cleansed",
+                           "calendar_updated", "calendar_last_scraped", "license", "id", ])
     y = data["price"]
 
     # 2. Split into train/val/test
@@ -35,9 +39,21 @@ def run_boosting(csv_file, image_predictions=None):
 
     # 4. One-hot encode low cardinality categorical columns
     OH_encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
-    OH_cols_train = pd.DataFrame(OH_encoder.fit_transform(X_train[low_card_cols]))
-    OH_cols_val = pd.DataFrame(OH_encoder.transform(X_val[low_card_cols]))
-    OH_cols_test = pd.DataFrame(OH_encoder.transform(X_test[low_card_cols]))
+    OH_cols_train = pd.DataFrame(
+        OH_encoder.fit_transform(X_train[low_card_cols]),
+        index=X_train.index,
+        columns=OH_encoder.get_feature_names_out(low_card_cols)
+    )
+    OH_cols_val = pd.DataFrame(
+        OH_encoder.transform(X_val[low_card_cols]),
+        index=X_val.index,
+        columns=OH_encoder.get_feature_names_out(low_card_cols)
+    )
+    OH_cols_test = pd.DataFrame(
+        OH_encoder.transform(X_test[low_card_cols]),
+        index=X_test.index,
+        columns=OH_encoder.get_feature_names_out(low_card_cols)
+    )
 
     # Restore indices
     OH_cols_train.index = X_train.index
@@ -213,4 +229,4 @@ def run_boosting(csv_file, image_predictions=None):
         "figs": figs,
         "log": log,
         "features": features
-    } 
+    }

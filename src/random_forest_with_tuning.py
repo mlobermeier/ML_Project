@@ -14,7 +14,10 @@ data = pd.read_csv("data/listings.csv")
 data["price"] = data["price"].replace('[\$,]', '', regex=True).astype(float)
 data = data.dropna(subset=["price"])
 
-X = data.drop(columns=["price"])
+X = data.drop(columns=["price", "listing_url", "scrape_id", "last_scraped", "source",
+                           "picture_url", "host_id", "host_url", "host_name", "host_thumbnail_url",
+                           "host_picture_url", "host_verifications", "neighbourhood_group_cleansed",
+                           "calendar_updated", "calendar_last_scraped", "license", "id", ])
 y = data["price"]
 
 # 2. Split into train/val/test
@@ -159,6 +162,8 @@ plt.show()
 # 4. Feature Importance Plot (top 20 features)
 importances = best_model.feature_importances_
 feature_names = OH_X_train.columns
+
+print(feature_names)
 
 sorted_idx = np.argsort(importances)[::-1][:20]  # top 20 features
 
