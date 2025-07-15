@@ -8,7 +8,7 @@ import torch
 
 # Import functions from src modules
 from image_predictions import generate_image_predictions
-from boosting_test import run_boosting
+from boosting_model import run_boosting
 
 import os
 from pathlib import Path
