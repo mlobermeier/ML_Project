@@ -174,6 +174,7 @@ def run_boosting(csv_file, image_predictions=None):
     ax_feat_imp.set_xlabel("Feature Importance")
     ax_feat_imp.set_title("Top 20 Feature Importances")
     ax_feat_imp.grid(True)
+    plt.tight_layout()  # Adjust layout to fit labels
 
     # 14. Residual pplot (Validation Set)
     residuals = np.expm1(y_val_log) - y_val_pred  # true - predicted
